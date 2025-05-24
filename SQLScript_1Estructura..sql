@@ -34,9 +34,21 @@ ventas_por_categoria (id_categoria)
  FROM locales
  GROUP BY id_categoria;
 
+DELETE FROM locales WHERE id_local= 11;
+
 
 CALL agregar_local('Don Bianco', 500, 1125589945, 'Av.Larrazabal 1445','1992-05-04');
-
                
 CALL actualizar_direccion (11, 'Av. Juan Bautista Alberdi 6105');
 
+
+
+DELETE FROM locales WHERE id_local= 13;
+
+SELECT * FROM auditoria_locales;
+
+UPDATE locales
+SET Ventas_por_dia = 250
+WHERE ID_local = 15;
+
+SELECT * FROM historial_ventas;
