@@ -110,5 +110,39 @@ END //
 DELIMITER ;
 
 
+CREATE TABLE historial_ventas(
+ id INT AUTO_INCREMENT PRIMARY KEY,
+ i_local INT,
+ ventas_anteriores DECIMAL (10,2),
+ ventas_nuevas DECIMAL (10,2),
+ fecha_cambio DATETIME
+ );
 
+DELIMITER //
+CREATE TRIGGER trg_actualizacion_ventas
+BEFORE UPDATE ON localeS
+FOR EACH ROW
+BEGIN
+ IF OLD.ventas_por_dia !=NEW.ventas_por_dia THEN
+INSERT INTO historial_ventas (id_local, ventas_anteriores, ventas_nuevas, fecha_cambio)
+VALUES (OLD.id_local, OLD.ventas_por_dia, NEW.ventas_por_dia, NOW ());
+END IF;
+END //
+DELIMITER ;
 
+CREATE TABLE auditoria_locales (
+ id_auditoria INT AUTO_INCREMENT PRIMARY KEY,
+ id_local INT,
+ nombre_local VARCHAR (100),
+ fecha_eliminacion DATETIME
+ );
+
+DELIMITER //
+CREATE TRIGGER trg_auditoria_borrado_local
+BEFORE DELETE ON locales
+FOR EACH ROW
+BEGIN
+  INSERT INTO auditoria_locales (id_local, nombre_local, fecha_eliminacion)
+  VALUES (OLD.id_local, OLD.nombre_local, NOW ());
+END //
+DELIMITER ;
