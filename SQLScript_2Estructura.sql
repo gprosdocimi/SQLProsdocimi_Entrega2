@@ -1,5 +1,6 @@
-CREATE DATABASE GastronomiaBSAS;
-USE GastronomiaBSAS;
+CREATE DATABASE gastronomiabsas;
+
+USE DATABASE gastronomiabsas;
 
 CREATE TABLE Categoria(
  ID_Categoria INT PRIMARY KEY AUTO_INCREMENT,
@@ -60,19 +61,24 @@ SELECT AVG (ventas_por_dia)
 FROM locales
 WHERE Locales.id_categoria=id_categoria);
 
-DELIMITER //
-CREATE FUNCTION cantidad_locales_barrio (
-id_barrio INT)
+DELIMITER $$  
+CREATE FUNCTION cantidad_locales_barrio (nombre_barrio VARCHAR (50))
 RETURNS INT
 DETERMINISTIC
 BEGIN
-DECLARE cantidad INT;
+DECLARE total INT;
+
 SELECT COUNT(*)
-INTO cantidad
-FROM locales
-WHERE id_barrio=P.id_barrio;
-RETURN cantidad;
-END;
+INTO total
+FROM locales 
+WHERE ID_Barrio= (
+SELECT ID_Barrio
+FROM barrio
+WHERE barrio=nombre_barrio
+LIMIT 1
+);
+RETURN total;
+END $$
 DELIMITER //;
 
 
