@@ -152,3 +152,16 @@ BEGIN
   VALUES (OLD.id_local, OLD.nombre_local, NOW ());
 END //
 DELIMITER ;
+
+
+CREATE TABLE resenias (
+id_resenia INT PRIMARY KEY AUTO_INCREMENT,
+id_local INT,
+nombre_cliente VARCHAR (50),
+calificacion INT CHECK (calificacion BETWEEN 1 AND 5),
+comentario TEXT,
+fecha_resenia DATETIME,
+FOREIGN KEY (id_local) REFERENCES locales (id_local)
+);
+
+
