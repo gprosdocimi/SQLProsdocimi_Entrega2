@@ -52,6 +52,28 @@ l.nombre_local
 FROM locales l
 JOIN categoria c ON c.id_categoria = l.id_local;
 
+CREATE VIEW vista_top_locales_calificados AS 
+ SELECT
+ l.nombre_local,
+ AVG (r.calificacion)AS promedio_calificacion,
+ COUNT( r.id_resenia)AS cantidad_resenias
+ FROM resenias r
+ JOIN locales l ON r.id_local =l.id_local
+ GROUP BY l.nombre_local
+ ORDER BY promedio_calificacion DESC
+ LIMIT 10;
+
+CREATE VIEW vista_promedio_visitas_por_barrio AS
+ SELECT 
+ b.barrio,
+ AVG (v.cantidad_personas) AS promedio_visitas
+ FROM visitas_local v
+JOIN locales l ON v.id_local= l.id_local
+ JOIN barrio b ON l.id_barrio=b.id_barrio 
+ GROUP BY b.barrio;
+
+
+
 
 CREATE FUNCTION ventas_por_categoria (id_categoria INT)
 RETURNS DECIMAL (10,2)
@@ -164,4 +186,12 @@ fecha_resenia DATETIME,
 FOREIGN KEY (id_local) REFERENCES locales (id_local)
 );
 
+
+CREATE TABLE visitas_local (
+ id_visita INT PRIMARY KEY AUTO_INCREMENT,
+ id_local INT,
+ fecha_visita DATE,
+ cantidad_personas INT,
+ FOREIGN KEY (id_local) REFERENCES locales (id_local)
+ );
 
